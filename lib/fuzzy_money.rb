@@ -1,5 +1,2 @@
-require "fuzzy_money/version"
-
-module FuzzyMoney
-  # Your code goes here...
-end
+require_relative 'fuzzy_money/version'
+require_relative 'fuzzy_money/normalize'
