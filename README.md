@@ -1,6 +1,6 @@
 # FuzzyMoney
 
-TODO: Write a gem description
+Make accurate-enough conversions and comparisons between price strings. For when you're collecting inconsistently structured pricing information (for example, via scraping) and you don't need the rigidness of [RubyMoney](https://github.com/RubyMoney/money).
 
 ## Installation
 
