@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'fuzzy_money'
 
 describe FuzzyMoney::Normalize do
   subject { FuzzyMoney::Normalize }
