@@ -9,6 +9,10 @@ describe FuzzyMoney::Price do
       '$10.99' => '$11',
       '€10,00' => '10€',
       '10.00€' => '10€',
+      '' => '',
+      nil => '',
+      '$0' => '$0',
+      '$0.00' => '$0'
     }.each do |raw, result|
      it "#{raw} -> #{result}" do
        price = FuzzyMoney::Price.new(raw)

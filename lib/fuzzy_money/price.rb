@@ -62,6 +62,7 @@ module FuzzyMoney
     end
 
     def normalize
+      return '' if split[:value].nil?
       min.denominate(:round)
     end
 
