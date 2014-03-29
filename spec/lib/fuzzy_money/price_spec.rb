@@ -1,7 +1,90 @@
 require 'spec_helper'
 
 describe FuzzyMoney::Price do
-  subject { FuzzyMoney::Price }
+  describe '#normalize' do
+    {
+      '$10' => '$10',
+      '$10-$55.00' => '$10',
+      '£8/€10/$12' => '$12',
+      '$10.99' => '$11',
+      '€10,00' => '10€',
+      '10.00€' => '10€',
+    }.each do |raw, result|
+     it "#{raw} -> #{result}" do
+       price = FuzzyMoney::Price.new(raw)
+       expect(price.normalize).to eq result
+     end
+    end
+  end
+
+  describe '#denominate' do
+    it "'£8/€10/$12'.min -> $12" do
+      price = FuzzyMoney::Price.new('£8/€10/$12')
+
+      expect(price.min.denominate(:to_i)).to eq('$12')
+    end
+  end
+
+  describe '#multiple' do
+    {
+      '£8/€10/$12' => ['£8', '€10' ,'$12'],
+    }.each do |raw, result|
+      it "#{raw} -> #{result}" do
+        price = FuzzyMoney::Price.new(raw)
+        ranges = price.multiple.map(&:raw)
+        expect(ranges).to eq result
+      end
+    end
+  end
+
+  describe '#multiple?' do
+    {
+      '£8/€10/$12' => true,
+      '€10' => false
+    }.each do |raw, result|
+      it "#{raw} -> #{result}" do
+        price = FuzzyMoney::Price.new(raw)
+        expect(price.multiple?).to eq result
+      end
+    end
+  end
+
+  describe '#range' do
+    {
+      '$10-$55.00' => ['$10', '$55.00'],
+    }.each do |raw, result|
+      it "#{raw} -> #{result}" do
+        price = FuzzyMoney::Price.new(raw)
+        ranges = price.range.map(&:raw)
+        expect(ranges).to eq result
+      end
+    end
+  end
+
+  describe '#range?' do
+    {
+      '$10-$55.00' => true,
+      '$55.00' => false,
+    }.each do |raw, result|
+      it "#{raw} -> #{result}" do
+        price = FuzzyMoney::Price.new(raw)
+        expect(price.range?).to eq result
+      end
+    end
+  end
+
+  describe '#min' do
+    {
+      '$10-$55.00' => '$10',
+      '£8/€10/$12' => '$12',
+      '$10.00' => '$10.00',
+    }.each do |raw, result|
+      it "#{raw} -> #{result}" do
+        price = FuzzyMoney::Price.new(raw)
+        expect(price.min.raw).to eq result
+      end
+    end
+  end
 
   describe "#split" do
     {
@@ -20,7 +103,6 @@ describe FuzzyMoney::Price do
         value = result[1]
 
         price = FuzzyMoney::Price.new(raw)
-
         expect(price.split).to eq({
           denomination: denomination,
           value: value
@@ -29,11 +111,10 @@ describe FuzzyMoney::Price do
     end
   end
 
-  describe '#normalize' do
+  describe '#normalized_float' do
     {
       # USD
       "$10.99" => 10.99,
-      "$10-$16" => 10.0,
       # Canadian Dollars
       "C$10.00" => 9.50,
       # Euros
@@ -42,17 +123,21 @@ describe FuzzyMoney::Price do
       "10.00€" => 13.20,
       "10,00€" => 13.20,
       # GBP
-      "£10.00" => 15.60
+      "£10.00" => 15.60,
+      # Multiple
+      '£8/€10/$12' => 12.0,
+      # Range
+      "$10-$16" => 10.0,
     }.each do |raw, result|
       it "converts #{raw} -> #{result}" do
         price = FuzzyMoney::Price.new(raw)
-        expect(price.normalize).to be_within(0.01).of(result)
+        expect(price.normalized_float).to be_within(0.01).of(result)
       end
     end
 
     it 'converts nil -> 0.0' do
       price = FuzzyMoney::Price.new(nil)
-      expect(price.normalize).to eq 0.0
+      expect(price.normalized_float).to eq 0.0
     end
   end
 end
