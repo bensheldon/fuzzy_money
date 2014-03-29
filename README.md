@@ -18,10 +18,6 @@ Or install it yourself as:
 
     $ gem install fuzzy_money
 
-## Usage
-
-TODO: Write usage instructions here
-
 ## Contributing
 
 1. Fork it ( http://github.com/<my-github-username>/fuzzy_money/fork )

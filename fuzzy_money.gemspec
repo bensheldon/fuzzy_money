@@ -8,8 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = FuzzyMoney::VERSION
   spec.authors       = ["Ben Sheldon"]
   spec.email         = ["bensheldon@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Make accurate-enough conversions and comparisons between price strings.}
+  spec.description   = %q{Make accurate-enough conversions and comparisons between price strings. For when you're collecting inconsistently structured pricing information (for example, via scraping) and you don't need the rigidness of [RubyMoney](https://github.com/RubyMoney/money).
+}
   spec.homepage      = ""
   spec.license       = "MIT"
 
